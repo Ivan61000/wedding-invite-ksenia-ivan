@@ -225,6 +225,14 @@ section { padding: 90px 22px; max-width: 640px; margin: 0 auto; text-align: cent
 }
 .info-pill b { color: var(--rose-deep); font-weight: 700; display: block; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px; }
 
+.hero-countdown {
+  display: flex; justify-content: center; gap: 22px; margin-top: 30px;
+  padding-top: 26px; border-top: 1px solid color-mix(in srgb, var(--rose) 30%, transparent);
+}
+.hc-item { display: flex; flex-direction: column; align-items: center; min-width: 44px; }
+.hc-num { font-family: 'PT Serif', serif; font-weight: 700; font-size: 26px; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1; }
+.hc-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-top: 5px; }
+
 .card {
   background: var(--card-bg);
   border: 1px solid color-mix(in srgb, var(--rose) 30%, transparent);
@@ -318,10 +326,10 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
         </g>
       </svg>
       <div class="countdown" id="countdown">
-        <div class="cd-item"><span class="cd-num" id="cdDays">—</span><span class="cd-label">дней</span></div>
-        <div class="cd-item"><span class="cd-num" id="cdHours">—</span><span class="cd-label">часов</span></div>
-        <div class="cd-item"><span class="cd-num" id="cdMins">—</span><span class="cd-label">минут</span></div>
-        <div class="cd-item"><span class="cd-num" id="cdSecs">—</span><span class="cd-label">секунд</span></div>
+        <div class="cd-item"><span class="cd-num js-cd-days">—</span><span class="cd-label">дней</span></div>
+        <div class="cd-item"><span class="cd-num js-cd-hours">—</span><span class="cd-label">часов</span></div>
+        <div class="cd-item"><span class="cd-num js-cd-mins">—</span><span class="cd-label">минут</span></div>
+        <div class="cd-item"><span class="cd-num js-cd-secs">—</span><span class="cd-label">секунд</span></div>
       </div>
     </div>
     <p class="intro-hint intro-line" style="animation-delay:2.4s">Нажмите, чтобы войти</p>
@@ -336,6 +344,12 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
   <div class="info-row reveal in-view">
     <div class="info-pill"><b>Дата</b>Уточняется</div>
     <div class="info-pill"><b>Место</b>Уточняется</div>
+  </div>
+  <div class="hero-countdown reveal in-view">
+    <div class="hc-item"><span class="hc-num js-cd-days">—</span><span class="hc-label">дней</span></div>
+    <div class="hc-item"><span class="hc-num js-cd-hours">—</span><span class="hc-label">часов</span></div>
+    <div class="hc-item"><span class="hc-num js-cd-mins">—</span><span class="hc-label">минут</span></div>
+    <div class="hc-item"><span class="hc-num js-cd-secs">—</span><span class="hc-label">секунд</span></div>
   </div>
 </section>
 
@@ -491,13 +505,15 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     petalsWrap.appendChild(p);
   }
 
-  // countdown to the wedding date
+  // countdown to the wedding date (updates every element with these classes,
+  // both the intro version and the persistent one in the hero section)
   var WEDDING_DATE = new Date('2026-11-01T00:00:00');
-  var cdDays = document.getElementById('cdDays');
-  var cdHours = document.getElementById('cdHours');
-  var cdMins = document.getElementById('cdMins');
-  var cdSecs = document.getElementById('cdSecs');
+  var cdDaysEls = document.querySelectorAll('.js-cd-days');
+  var cdHoursEls = document.querySelectorAll('.js-cd-hours');
+  var cdMinsEls = document.querySelectorAll('.js-cd-mins');
+  var cdSecsEls = document.querySelectorAll('.js-cd-secs');
   function pad(n) { return String(n).padStart(2, '0'); }
+  function setAll(list, text) { list.forEach(function (el) { el.textContent = text; }); }
   function tickCountdown() {
     var diff = WEDDING_DATE.getTime() - Date.now();
     if (diff < 0) diff = 0;
@@ -505,13 +521,13 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     var hours = Math.floor((diff % 86400000) / 3600000);
     var mins = Math.floor((diff % 3600000) / 60000);
     var secs = Math.floor((diff % 60000) / 1000);
-    cdDays.textContent = String(days);
-    cdHours.textContent = pad(hours);
-    cdMins.textContent = pad(mins);
-    cdSecs.textContent = pad(secs);
+    setAll(cdDaysEls, String(days));
+    setAll(cdHoursEls, pad(hours));
+    setAll(cdMinsEls, pad(mins));
+    setAll(cdSecsEls, pad(secs));
   }
   tickCountdown();
-  var countdownTimer = setInterval(tickCountdown, 1000);
+  setInterval(tickCountdown, 1000);
 
   function enterSite() {
     if (opened) return;
@@ -520,7 +536,6 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     if (!muted) music.play().catch(function () {});
     setTimeout(function () {
       document.body.classList.remove('locked');
-      clearInterval(countdownTimer);
     }, 700);
   }
 
