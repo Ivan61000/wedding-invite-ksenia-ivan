@@ -133,14 +133,48 @@ h1, h2, h3 { font-weight: 400; text-wrap: balance; }
 .intro-line { opacity: 0; transform: translateY(16px); animation: introIn 0.9s ease forwards; }
 @keyframes introIn { to { opacity: 1; transform: translateY(0); } }
 
-.intro-rings { width: 200px; height: auto; margin: 0 auto 26px; display: block; overflow: visible; }
-.ring { stroke-dasharray: 214; stroke-dashoffset: 214; animation: ringDraw 1.1s ease forwards; }
+.intro-visual { position: relative; width: 280px; max-width: 82vw; height: 110px; margin: 0 auto 14px; }
+.intro-rings { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 200px; height: auto; overflow: visible; }
+.ring {
+  stroke-dasharray: 214; stroke-dashoffset: 214; opacity: 1;
+  animation: ringDrawErase 2.5s ease-in-out forwards;
+}
 .ring-a { animation-delay: 0.15s; }
 .ring-b { animation-delay: 0.45s; }
-@keyframes ringDraw { to { stroke-dashoffset: 0; } }
-.sparkle { opacity: 0; transform-box: fill-box; transform-origin: center; animation: sparkleIn 0.6s ease forwards, sparkleTwinkle 2.4s ease-in-out 1.3s infinite; animation-delay: 0.95s, 1.55s; }
-@keyframes sparkleIn { to { opacity: 1; } }
-@keyframes sparkleTwinkle { 0%, 100% { opacity: 0.5; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.1); } }
+@keyframes ringDrawErase {
+  0%   { stroke-dashoffset: 214; opacity: 1; }
+  30%  { stroke-dashoffset: 0;   opacity: 1; }
+  52%  { stroke-dashoffset: 0;   opacity: 1; }
+  80%  { stroke-dashoffset: 214; opacity: 0; }
+  100% { stroke-dashoffset: 214; opacity: 0; }
+}
+.sparkle {
+  opacity: 0; transform-box: fill-box; transform-origin: center;
+  animation: sparkleLife 2.5s ease-in-out forwards;
+  animation-delay: 0.85s;
+}
+@keyframes sparkleLife {
+  0%   { opacity: 0; transform: scale(0.8); }
+  18%  { opacity: 1; transform: scale(1.1); }
+  50%  { opacity: 1; transform: scale(0.9); }
+  78%  { opacity: 0; transform: scale(0.7); }
+  100% { opacity: 0; }
+}
+
+.countdown {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 16px;
+  opacity: 0; transform: translateY(16px);
+  animation: introIn 0.9s ease forwards;
+  animation-delay: 2.0s;
+}
+.cd-item { display: flex; flex-direction: column; align-items: center; min-width: 46px; }
+.cd-num {
+  font-family: 'PT Serif', serif; font-weight: 700; font-size: 30px; line-height: 1;
+  color: var(--gold); font-variant-numeric: tabular-nums;
+}
+.cd-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-top: 5px; }
+.cd-sep { color: var(--rose); font-size: 22px; margin-top: -14px; }
+
 .intro-hint {
   margin-top: 4px;
   color: var(--ink-soft);
@@ -268,21 +302,29 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
   #introOverlay, .reveal, html { transition-duration: 0.01ms !important; scroll-behavior: auto; }
   .intro-line { animation: none; opacity: 1; transform: none; }
   .petal { animation: none; display: none; }
-  .ring { animation: none; stroke-dashoffset: 0; }
-  .sparkle { animation: none; opacity: 1; }
+  .ring, .sparkle { animation: none; opacity: 0; }
+  .countdown { animation: none; opacity: 1; transform: none; }
 }
 </style>
 
 <div id="introOverlay" role="button" tabindex="0" aria-label="Войти в приглашение">
   <div class="intro-content">
-    <svg class="intro-rings intro-line" style="animation-delay:.1s" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
-      <circle class="ring ring-a" cx="66" cy="55" r="34" fill="none" stroke="var(--gold)" stroke-width="4"/>
-      <circle class="ring ring-b" cx="98" cy="55" r="34" fill="none" stroke="var(--gold-soft)" stroke-width="4"/>
-      <g class="sparkle" fill="var(--gold)">
-        <path d="M120 22 L123 30 L131 33 L123 36 L120 44 L117 36 L109 33 L117 30 Z"/>
-      </g>
-    </svg>
-    <p class="intro-hint intro-line" style="animation-delay:1.1s">Нажмите, чтобы войти</p>
+    <div class="intro-visual">
+      <svg class="intro-rings" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ring ring-a" cx="66" cy="55" r="34" fill="none" stroke="var(--gold)" stroke-width="4"/>
+        <circle class="ring ring-b" cx="98" cy="55" r="34" fill="none" stroke="var(--gold-soft)" stroke-width="4"/>
+        <g class="sparkle" fill="var(--gold)">
+          <path d="M120 22 L123 30 L131 33 L123 36 L120 44 L117 36 L109 33 L117 30 Z"/>
+        </g>
+      </svg>
+      <div class="countdown" id="countdown">
+        <div class="cd-item"><span class="cd-num" id="cdDays">—</span><span class="cd-label">дней</span></div>
+        <div class="cd-item"><span class="cd-num" id="cdHours">—</span><span class="cd-label">часов</span></div>
+        <div class="cd-item"><span class="cd-num" id="cdMins">—</span><span class="cd-label">минут</span></div>
+        <div class="cd-item"><span class="cd-num" id="cdSecs">—</span><span class="cd-label">секунд</span></div>
+      </div>
+    </div>
+    <p class="intro-hint intro-line" style="animation-delay:2.4s">Нажмите, чтобы войти</p>
   </div>
   <div id="petals"></div>
 </div>
@@ -449,6 +491,28 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     petalsWrap.appendChild(p);
   }
 
+  // countdown to the wedding date
+  var WEDDING_DATE = new Date('2026-11-01T00:00:00');
+  var cdDays = document.getElementById('cdDays');
+  var cdHours = document.getElementById('cdHours');
+  var cdMins = document.getElementById('cdMins');
+  var cdSecs = document.getElementById('cdSecs');
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tickCountdown() {
+    var diff = WEDDING_DATE.getTime() - Date.now();
+    if (diff < 0) diff = 0;
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff % 86400000) / 3600000);
+    var mins = Math.floor((diff % 3600000) / 60000);
+    var secs = Math.floor((diff % 60000) / 1000);
+    cdDays.textContent = String(days);
+    cdHours.textContent = pad(hours);
+    cdMins.textContent = pad(mins);
+    cdSecs.textContent = pad(secs);
+  }
+  tickCountdown();
+  var countdownTimer = setInterval(tickCountdown, 1000);
+
   function enterSite() {
     if (opened) return;
     opened = true;
@@ -456,6 +520,7 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     if (!muted) music.play().catch(function () {});
     setTimeout(function () {
       document.body.classList.remove('locked');
+      clearInterval(countdownTimer);
     }, 700);
   }
 
