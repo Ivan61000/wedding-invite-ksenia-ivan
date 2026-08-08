@@ -147,6 +147,19 @@ h1, h2, h3 { font-weight: 400; text-wrap: balance; }
 @keyframes sparkleIn { to { opacity: 1; } }
 @keyframes sparkleTwinkle { 0%, 100% { opacity: 0.5; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.1); } }
 
+.ring-monogram {
+  opacity: 0;
+  font-family: 'Marck Script', cursive;
+  font-size: 21px;
+  fill: var(--rose-deep);
+  text-anchor: middle;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: monoIn 0.7s ease forwards;
+  animation-delay: 1.55s;
+}
+@keyframes monoIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+
 .intro-hint {
   margin-top: 4px;
   color: var(--ink-soft);
@@ -284,6 +297,7 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
   .petal { animation: none; display: none; }
   .ring { animation: none; stroke-dashoffset: 0; }
   .sparkle { animation: none; opacity: 1; }
+  .ring-monogram { animation: none; opacity: 1; }
 }
 </style>
 
@@ -293,6 +307,7 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
       <svg class="intro-rings" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
         <circle class="ring ring-a" cx="66" cy="55" r="34" fill="none" stroke="var(--gold)" stroke-width="4"/>
         <circle class="ring ring-b" cx="98" cy="55" r="34" fill="none" stroke="var(--gold-soft)" stroke-width="4"/>
+        <text class="ring-monogram" x="82" y="62">К + И</text>
         <g class="sparkle" fill="var(--gold)">
           <path d="M120 22 L123 30 L131 33 L123 36 L120 44 L117 36 L109 33 L117 30 Z"/>
         </g>
