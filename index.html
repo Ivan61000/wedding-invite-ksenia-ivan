@@ -182,16 +182,28 @@ section { padding: 52px 22px; max-width: 640px; margin: 0 auto; text-align: cent
 #hero p.lede { color: var(--ink-soft); font-size: 17px; max-width: 40ch; margin: 18px auto 0; line-height: 1.7; }
 
 .info-row {
-  display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 34px;
+  display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 34px;
 }
 .info-pill {
+  position: relative;
   border: 1px solid color-mix(in srgb, var(--rose) 40%, transparent);
-  border-radius: 999px; padding: 12px 22px; font-size: 14.5px; color: var(--ink);
+  border-radius: 14px; font-size: 14.5px; color: var(--ink);
   background: var(--card-bg);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: box-shadow 0.25s ease;
+  width: 168px; height: 78px;
+  overflow: hidden;
 }
-.info-pill:hover { transform: translateY(-3px); box-shadow: 0 10px 18px -12px var(--ring-shadow); }
+.info-pill:hover { box-shadow: 0 10px 18px -12px var(--ring-shadow); }
+.scratch-content {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 8px;
+}
 .info-pill b { color: var(--rose-deep); font-weight: 700; display: block; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px; }
+.scratch-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  cursor: pointer; touch-action: none; border-radius: 14px;
+}
+.scratch-canvas.done { opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
 
 .hero-countdown-wrap { margin-top: 30px; }
 .flourish { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 auto 18px; }
@@ -353,8 +365,14 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
   <h1 class="names reveal in-view">Ксения <span class="amp">&amp;</span> Иван</h1>
   <p class="lede reveal in-view">С трепетом в сердце приглашаем вас разделить с нами один из самых важных дней нашей жизни</p>
   <div class="info-row reveal in-view">
-    <div class="info-pill"><b>Дата</b>Уточняется</div>
-    <div class="info-pill"><b>Место</b>Уточняется</div>
+    <div class="info-pill scratch-card">
+      <div class="scratch-content"><b>Дата</b>Уточняется</div>
+      <canvas class="scratch-canvas" data-label="ПОТРИТЕ"></canvas>
+    </div>
+    <div class="info-pill scratch-card">
+      <div class="scratch-content"><b>Место</b>Уточняется</div>
+      <canvas class="scratch-canvas" data-label="ПОТРИТЕ"></canvas>
+    </div>
   </div>
   <div class="hero-countdown-wrap reveal in-view">
     <div class="flourish"><span class="fl-line"></span><span class="fl-dot"></span><span class="fl-line"></span></div>
@@ -456,6 +474,103 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
   var opened = false;
 
   document.body.classList.add('locked');
+
+  // scratch-off cards (date / place)
+  function initScratchCard(canvas) {
+    var ctx = canvas.getContext('2d');
+    var card = canvas.closest('.info-pill');
+    var revealed = false;
+    var dpr = window.devicePixelRatio || 1;
+    var cssW, cssH;
+
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#c98a6b';
+    }
+
+    function drawFoil() {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(dpr, dpr);
+      var grad = ctx.createLinearGradient(0, 0, cssW, cssH);
+      grad.addColorStop(0, cssVar('--gold-soft'));
+      grad.addColorStop(1, cssVar('--seal'));
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, cssW, cssH);
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      for (var i = 0; i < 14; i++) {
+        ctx.beginPath();
+        ctx.arc(Math.random() * cssW, Math.random() * cssH, 1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.font = '700 10px "PT Serif", serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✦', cssW / 2, cssH / 2 - 12);
+      ctx.font = '700 10.5px "PT Serif", serif';
+      ctx.fillText('ПОТРИТЕ', cssW / 2, cssH / 2 + 4);
+      ctx.font = '400 9px "PT Serif", serif';
+      ctx.fillText('пальцем', cssW / 2, cssH / 2 + 17);
+    }
+
+    function resize() {
+      var rect = card.getBoundingClientRect();
+      cssW = rect.width; cssH = rect.height;
+      canvas.width = cssW * dpr;
+      canvas.height = cssH * dpr;
+      if (!revealed) drawFoil();
+    }
+
+    function pos(e) {
+      var rect = canvas.getBoundingClientRect();
+      var t = e.touches && e.touches[0];
+      return { x: (t ? t.clientX : e.clientX) - rect.left, y: (t ? t.clientY : e.clientY) - rect.top };
+    }
+
+    function scratchAt(x, y) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 20, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function checkRevealed() {
+      if (revealed) return;
+      var w = canvas.width, h = canvas.height;
+      var data = ctx.getImageData(0, 0, w, h).data;
+      var sampled = 0, cleared = 0;
+      for (var i = 3; i < data.length; i += 4 * 24) {
+        sampled++;
+        if (data[i] < 40) cleared++;
+      }
+      if (sampled && cleared / sampled > 0.55) {
+        revealed = true;
+        canvas.classList.add('done');
+      }
+    }
+
+    var scratching = false;
+    function start(e) { scratching = true; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); var p = pos(e); scratchAt(p.x, p.y); }
+    function move(e) {
+      if (!scratching || revealed) return;
+      e.preventDefault();
+      var p = pos(e);
+      scratchAt(p.x, p.y);
+      checkRevealed();
+    }
+    function end() { scratching = false; }
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, { passive: true });
+    canvas.addEventListener('touchmove', move, { passive: false });
+    canvas.addEventListener('touchend', end);
+    window.addEventListener('resize', resize);
+    resize();
+  }
+  document.querySelectorAll('.scratch-canvas').forEach(initScratchCard);
 
   // generate drifting petals
   var petalCount = 16;
