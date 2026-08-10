@@ -271,7 +271,10 @@ section { padding: 90px 22px; max-width: 640px; margin: 0 auto; text-align: cent
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 .attend-btn:hover { transform: translateY(-2px); }
-.attend-btn[aria-pressed="true"] { background: var(--rose-deep); border-color: var(--rose-deep); color: var(--ivory); }
+.attend-btn[aria-pressed="true"] {
+  background: radial-gradient(circle at 30% 20%, var(--gold-soft), var(--seal) 80%);
+  border-color: var(--seal); color: var(--ivory);
+}
 .submit-btn {
   margin-top: 6px; padding: 15px; border: none; border-radius: 4px; cursor: pointer;
   background: radial-gradient(circle at 30% 20%, var(--gold-soft), var(--seal) 80%);
