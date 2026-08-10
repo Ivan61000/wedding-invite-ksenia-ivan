@@ -213,12 +213,26 @@ section { padding: 52px 22px; max-width: 640px; margin: 0 auto; text-align: cent
   font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--rose-deep); font-weight: 700; margin-bottom: 14px;
 }
-.hero-countdown { display: flex; justify-content: center; gap: 22px; }
-.hc-item { display: flex; flex-direction: column; align-items: center; min-width: 44px; }
-.hc-num { font-family: 'PT Serif', serif; font-weight: 700; font-size: 26px; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1; display: inline-block; }
-.cd-num.tick, .hc-num.tick { animation: numPulse 0.4s ease; }
-@keyframes numPulse { 0% { transform: scale(1); } 35% { transform: scale(1.16); } 100% { transform: scale(1); } }
-.hc-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-top: 5px; }
+.hero-countdown { display: flex; justify-content: center; gap: 14px; }
+.hc-item { display: flex; flex-direction: column; align-items: center; }
+.hc-num {
+  display: inline-block; min-width: 50px; padding: 10px 4px;
+  background: linear-gradient(180deg, var(--ink) 0%, color-mix(in srgb, var(--ink) 82%, black) 100%);
+  border-radius: 6px; color: var(--gold-soft);
+  font-family: 'PT Serif', serif; font-weight: 700; font-size: 24px; line-height: 1;
+  font-variant-numeric: tabular-nums; text-align: center;
+  position: relative; box-shadow: 0 4px 10px -4px rgba(0,0,0,0.4);
+  transform-origin: center;
+}
+.hc-num::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0,0,0,0.4); }
+.hc-num.flip { animation: flipCard 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+@keyframes flipCard {
+  0% { transform: scaleY(1); }
+  48% { transform: scaleY(0.04); }
+  52% { transform: scaleY(0.04); }
+  100% { transform: scaleY(1); }
+}
+.hc-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-top: 7px; }
 
 .card {
   background: var(--card-bg);
@@ -611,7 +625,15 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
   var cdMinsEls = document.querySelectorAll('.js-cd-mins');
   var cdSecsEls = document.querySelectorAll('.js-cd-secs');
   function pad(n) { return String(n).padStart(2, '0'); }
-  function setAll(list, text) { list.forEach(function (el) { el.textContent = text; }); }
+  function setFlip(list, text) {
+    list.forEach(function (el) {
+      if (el.textContent === text) return;
+      el.classList.remove('flip');
+      void el.offsetWidth;
+      el.classList.add('flip');
+      setTimeout(function () { el.textContent = text; }, 250);
+    });
+  }
   function tickCountdown() {
     var diff = WEDDING_DATE.getTime() - Date.now();
     if (diff < 0) diff = 0;
@@ -619,15 +641,10 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     var hours = Math.floor((diff % 86400000) / 3600000);
     var mins = Math.floor((diff % 3600000) / 60000);
     var secs = Math.floor((diff % 60000) / 1000);
-    setAll(cdDaysEls, String(days));
-    setAll(cdHoursEls, pad(hours));
-    setAll(cdMinsEls, pad(mins));
-    setAll(cdSecsEls, pad(secs));
-    cdSecsEls.forEach(function (el) {
-      el.classList.remove('tick');
-      void el.offsetWidth;
-      el.classList.add('tick');
-    });
+    setFlip(cdDaysEls, String(days));
+    setFlip(cdHoursEls, pad(hours));
+    setFlip(cdMinsEls, pad(mins));
+    setFlip(cdSecsEls, pad(secs));
   }
   tickCountdown();
   setInterval(tickCountdown, 1000);
