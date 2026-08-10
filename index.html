@@ -352,13 +352,11 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
   <div class="divider reveal"></div>
   <div class="card reveal">
     <div class="tl">
-      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Сбор гостей</div></div>
-      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Церемония</div></div>
-      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Фуршет и фото</div></div>
-      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Банкет</div></div>
-      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Танцы</div></div>
+      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Сбор у ЗАГСа</div></div>
+      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Церемония бракосочетания</div></div>
+      <div class="tl-item"><div class="tl-time">—</div><div class="tl-label">Поздравления и фото</div></div>
     </div>
-    <p class="tl-note">Точное расписание появится ближе к дате — следите за обновлениями</p>
+    <p class="tl-note">Точное время появится ближе к дате — следите за обновлениями</p>
   </div>
 </section>
 
@@ -412,7 +410,7 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
 <section id="rsvp">
   <h2 class="script reveal" style="font-size:36px;margin:0 0 6px;">Подтвердите присутствие</h2>
   <div class="divider reveal"></div>
-  <p class="reveal" style="color:var(--ink-soft);font-size:15px;">Будем благодарны, если ответите до указанной даты — это поможет нам с рассадкой и банкетом</p>
+  <p class="reveal" style="color:var(--ink-soft);font-size:15px;">В ЗАГСе немного места, поэтому будем благодарны, если ответите заранее — это поможет нам всё организовать</p>
   <form class="card rsvp-form reveal" id="rsvpForm">
     <div class="field">
       <label for="rname">Ваше имя</label>
@@ -426,12 +424,12 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
       </div>
     </div>
     <div class="field">
-      <label for="rguests">Количество гостей (с вами)</label>
-      <input id="rguests" name="rguests" type="number" min="1" max="6" value="1">
+      <label for="rguests">Количество человек (с вами)</label>
+      <input id="rguests" name="rguests" type="number" min="1" max="2" value="1">
     </div>
     <div class="field">
-      <label for="rnote">Пожелания по меню / комментарий</label>
-      <textarea id="rnote" name="rnote" rows="3" placeholder="Аллергии, пожелания..."></textarea>
+      <label for="rnote">Комментарий (необязательно)</label>
+      <textarea id="rnote" name="rnote" rows="3" placeholder="Если хотите что-то сообщить..."></textarea>
     </div>
     <button type="submit" class="submit-btn">Отправить ответ</button>
     <p class="rsvp-status" id="rsvpStatus"></p>
