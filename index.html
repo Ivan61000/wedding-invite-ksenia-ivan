@@ -219,10 +219,12 @@ section { padding: 90px 22px; max-width: 640px; margin: 0 auto; text-align: cent
 .info-pill:hover { transform: translateY(-3px); box-shadow: 0 10px 18px -12px var(--ring-shadow); }
 .info-pill b { color: var(--rose-deep); font-weight: 700; display: block; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px; }
 
-.hero-countdown {
-  display: flex; justify-content: center; gap: 22px; margin-top: 30px;
-  padding-top: 26px; border-top: 1px solid color-mix(in srgb, var(--rose) 30%, transparent);
+.hero-countdown-wrap { margin-top: 44px; }
+.hc-eyebrow {
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--rose-deep); font-weight: 700; margin-bottom: 14px;
 }
+.hero-countdown { display: flex; justify-content: center; gap: 22px; }
 .hc-item { display: flex; flex-direction: column; align-items: center; min-width: 44px; }
 .hc-num { font-family: 'PT Serif', serif; font-weight: 700; font-size: 26px; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1; display: inline-block; }
 .cd-num.tick, .hc-num.tick { animation: numPulse 0.4s ease; }
@@ -356,6 +358,17 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
 </div>
 
 <section id="hero">
+  <svg class="sprig reveal in-view" viewBox="0 0 92 46" xmlns="http://www.w3.org/2000/svg">
+    <g fill="none" stroke="var(--rose)" stroke-width="1.6" stroke-linecap="round">
+      <path d="M46 40 C46 26 40 14 20 6" /><path d="M46 40 C46 26 52 14 72 6" />
+      <path d="M30 24 C26 20 24 16 24 12" /><path d="M62 24 C66 20 68 16 68 12" />
+    </g>
+    <g fill="var(--rose)" opacity="0.85">
+      <ellipse cx="20" cy="6" rx="5" ry="3" transform="rotate(-25 20 6)"/><ellipse cx="72" cy="6" rx="5" ry="3" transform="rotate(25 72 6)"/>
+      <ellipse cx="30" cy="20" rx="4" ry="2.4" transform="rotate(-40 30 20)"/><ellipse cx="62" cy="20" rx="4" ry="2.4" transform="rotate(40 62 20)"/>
+    </g>
+    <circle cx="46" cy="8" r="4" fill="var(--gold-soft)"/>
+  </svg>
   <div class="eyebrow reveal in-view">Приглашение на свадьбу</div>
   <h1 class="names reveal in-view">Ксения <span class="amp">&amp;</span> Иван</h1>
   <p class="lede reveal in-view">С трепетом в сердце приглашаем вас разделить с нами один из самых важных дней нашей жизни</p>
@@ -363,11 +376,15 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     <div class="info-pill"><b>Дата</b>Уточняется</div>
     <div class="info-pill"><b>Место</b>Уточняется</div>
   </div>
-  <div class="hero-countdown reveal in-view">
-    <div class="hc-item"><span class="hc-num js-cd-days">—</span><span class="hc-label">дней</span></div>
-    <div class="hc-item"><span class="hc-num js-cd-hours">—</span><span class="hc-label">часов</span></div>
-    <div class="hc-item"><span class="hc-num js-cd-mins">—</span><span class="hc-label">минут</span></div>
-    <div class="hc-item"><span class="hc-num js-cd-secs">—</span><span class="hc-label">секунд</span></div>
+  <div class="hero-countdown-wrap reveal in-view">
+    <div class="divider" style="width:44px;"></div>
+    <div class="hc-eyebrow">До свадьбы осталось</div>
+    <div class="hero-countdown">
+      <div class="hc-item"><span class="hc-num js-cd-days">—</span><span class="hc-label">дней</span></div>
+      <div class="hc-item"><span class="hc-num js-cd-hours">—</span><span class="hc-label">часов</span></div>
+      <div class="hc-item"><span class="hc-num js-cd-mins">—</span><span class="hc-label">минут</span></div>
+      <div class="hc-item"><span class="hc-num js-cd-secs">—</span><span class="hc-label">секунд</span></div>
+    </div>
   </div>
 </section>
 
