@@ -33,6 +33,8 @@
   font-display: swap;
 }
 
+/* Deliberately single-theme: a wedding invitation should always read as
+   bright and bridal, never switch to a dark palette with the viewer's OS. */
 :root {
   --ivory: #fdf7f5;
   --ivory-2: #f7ebe8;
@@ -45,34 +47,6 @@
   --card-bg: #ffffff;
   --seal: #c98a6b;
   --ring-shadow: rgba(120, 70, 75, 0.28);
-}
-:root[data-theme="dark"] {
-  --ivory: #1e1517;
-  --ivory-2: #241a1c;
-  --rose: #c98f96;
-  --rose-deep: #e8c2c6;
-  --gold: #d8ac6c;
-  --gold-soft: #e3bd82;
-  --ink: #f3e6e7;
-  --ink-soft: #c4a9ac;
-  --card-bg: #2a1e20;
-  --seal: #d99a7b;
-  --ring-shadow: rgba(0, 0, 0, 0.5);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ivory: #1e1517;
-    --ivory-2: #241a1c;
-    --rose: #c98f96;
-    --rose-deep: #e8c2c6;
-    --gold: #d8ac6c;
-    --gold-soft: #e3bd82;
-    --ink: #f3e6e7;
-    --ink-soft: #c4a9ac;
-    --card-bg: #2a1e20;
-    --seal: #d99a7b;
-    --ring-shadow: rgba(0, 0, 0, 0.5);
-  }
 }
 
 * { box-sizing: border-box; }
@@ -220,6 +194,9 @@ section { padding: 90px 22px; max-width: 640px; margin: 0 auto; text-align: cent
 .info-pill b { color: var(--rose-deep); font-weight: 700; display: block; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 3px; }
 
 .hero-countdown-wrap { margin-top: 44px; }
+.flourish { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 auto 18px; }
+.flourish .fl-line { width: 30px; height: 1px; background: var(--gold-soft); }
+.flourish .fl-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
 .hc-eyebrow {
   font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--rose-deep); font-weight: 700; margin-bottom: 14px;
@@ -377,7 +354,7 @@ footer .script { font-size: 22px; color: var(--ink); display: block; margin-bott
     <div class="info-pill"><b>Место</b>Уточняется</div>
   </div>
   <div class="hero-countdown-wrap reveal in-view">
-    <div class="divider" style="width:44px;"></div>
+    <div class="flourish"><span class="fl-line"></span><span class="fl-dot"></span><span class="fl-line"></span></div>
     <div class="hc-eyebrow">До свадьбы осталось</div>
     <div class="hero-countdown">
       <div class="hc-item"><span class="hc-num js-cd-days">—</span><span class="hc-label">дней</span></div>
